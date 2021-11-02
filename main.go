@@ -32,7 +32,13 @@ func ApplyRoutes(r *gin.Engine) {
 	bc := controllers.NewBitcouController()
 	api := r.Group("/")
 	{
+		api.POST("order", bc.CreateOrder)
+		api.GET("vouchers", bc.GetVoucher)
+		api.GET("vouchers/compact", bc.GetCompactVouchers)
+		api.GET("account", bc.GetAccountInfo)
 		api.GET("balance", bc.GetAccountBalance)
+		api.GET("vouchers/:voucherId", bc.GetVoucher)
+		api.GET("orders/:orderId", bc.GetOrder)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
