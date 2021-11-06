@@ -1,11 +1,12 @@
 package main
 
 import (
+	"net/http"
+	"os"
+
 	"github.com/bitcou/bitcou-wrapper/controllers"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"os"
 )
 
 func main() {
@@ -33,7 +34,7 @@ func ApplyRoutes(r *gin.Engine) {
 	api := r.Group("/")
 	{
 		api.POST("order", bc.CreateOrder)
-		api.GET("vouchers", bc.GetVoucher)
+		api.GET("vouchers", bc.GetVouchers)
 		api.GET("vouchers/compact", bc.GetCompactVouchers)
 		api.GET("account", bc.GetAccountInfo)
 		api.GET("balance", bc.GetAccountBalance)
