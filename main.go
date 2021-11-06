@@ -37,7 +37,7 @@ func ApplyRoutes(r *gin.Engine) {
 		api.GET("vouchers", bc.GetVouchers)
 		api.GET("vouchers/compact", bc.GetCompactVouchers)
 		api.GET("account", bc.GetAccountInfo)
-		api.GET("balance", bc.GetAccountBalance)
+		api.GET("account/balance", bc.GetAccountBalance)
 		api.GET("vouchers/:voucherId", bc.GetVoucher)
 		api.GET("orders/:orderId", bc.GetOrder)
 	}

@@ -29,21 +29,51 @@ func NewBitcou(apiKey string, dev bool) *Bitcou {
 	return b
 }
 
-func (b *Bitcou) Products(getFullProducts bool) (interface{}, error) {
-	if getFullProducts {
+func (b *Bitcou) Products(prodInfo ...string) (interface{}, error) {
+	if prodInfo[0] == FULL_PRODUCTS {
 		err := b.client.Query(context.Background(), &productsQuery, nil)
 		if err != nil {
 			log.Println("gql::products::error ", err)
 			return nil, err
 		}
 		return productsQuery.Products, nil
-	} else {
+	} else if prodInfo[0] == COMPACT_PRODUCTS {
 		err := b.client.Query(context.Background(), &compactProductsQuery, nil)
 		if err != nil {
 			log.Println("gql::products::error ", err)
 			return nil, err
 		}
 		return compactProductsQuery.Products, nil
+	} else if prodInfo[0] == SINGULAR_PRODUCT {
+		log.Println("product id to retrieve: ", prodInfo[1])
+		err := b.client.Query(context.Background(), &singularProductQuery, nil)
+		if err != nil {
+			log.Println("gql::products::error ", err)
+			return nil, err
+		}
+		return singularProductQuery.Products[0], nil
+	} else {
+		return nil, nil
+	}
+}
+
+func (b *Bitcou) AccountInfo(info string) (interface{}, error) {
+	if info == ACCOUNT_INFO {
+		err := b.client.Query(context.Background(), &accountInfoQuery, nil)
+		if err != nil {
+			log.Println("gql::accountInfo::error ", err)
+			return nil, err
+		}
+		return accountInfoQuery.AccountInfo, nil
+	} else if info == ACCOUNT_BALANCE {
+		err := b.client.Query(context.Background(), &accountBalanceQuery, nil)
+		if err != nil {
+			log.Println("gql::accountInfo::error ", err)
+			return nil, err
+		}
+		return accountBalanceQuery.AccountInfo, nil
+	} else {
+		return nil, nil
 	}
 }
 
