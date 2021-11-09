@@ -188,8 +188,7 @@ var singularProductQuery struct {
 		RecommendedAmounts graphql.String
 		VariantName        graphql.String
 		Validity           graphql.String
-		// } `graphql:"products(limit: 3)"`
-	} `graphql:"products(filter: {id: 10000})"`
+	} `graphql:"products(filter: {id: $prodId})"`
 }
 
 // Queries for account info
@@ -242,4 +241,74 @@ var accountBalanceQuery struct {
 	AccountInfo struct {
 		Balance graphql.Float
 	}
+}
+
+// Queries for purchases
+const (
+	CREATE_ORDER string = "CREATE_ORDER"
+	GET_ORDER           = "GET_ORDER"
+)
+
+type PurchaseInput struct {
+	TransactionID string  `json:"transactionID"`
+	ProductID     int     `json:"productID"`
+	TotalValue    float64 `json:"totalValue"`
+	UserInfo      struct {
+		Email            string `json:"email"`
+		Name             string `json:"name"`
+		Country          string `json:"country"`
+		PhoneCountryCode string `json:"phoneCountryCode"`
+		PhoneNumber      string `json:"phoneNumber"`
+		ServiceNumber    string `json:"serviceNumber"`
+	} `json:"userInfo"`
+}
+
+var createPurchaseQuery struct {
+	CreatePurchase struct {
+		ID graphql.String
+		// TransactionID graphql.String
+		Client struct {
+			ID   graphql.String
+			Name graphql.String
+		}
+		TotalValue    graphql.Float
+		OriginalValue graphql.Float
+		// EndUserName             graphql.String
+		// EndUserEmail            graphql.String
+		// EndUserCountry          graphql.String
+		// EndUserPhoneCountryCode graphql.String
+		// EndUserPhoneNumber      graphql.String
+		// EndUserSecondNumber     graphql.String
+		TimestampRequest   graphql.Int
+		TimestampFulfilled graphql.Int
+		RedeemCode         graphql.String
+		Receipt            graphql.String
+		ErrorMessage       graphql.String
+		Status             graphql.String
+	} `graphql:"createPurchase(purchase: $purchaseInput)"`
+}
+
+var getPurchaseQuery struct {
+	Purchases []struct {
+		ID graphql.String
+		// TransactionID graphql.String
+		Client struct {
+			ID   graphql.String
+			Name graphql.String
+		}
+		TotalValue    graphql.Int
+		OriginalValue graphql.Int
+		// EndUserName             graphql.String
+		// EndUserEmail            graphql.String
+		// EndUserCountry          graphql.String
+		// EndUserPhoneCountryCode graphql.String
+		// EndUserPhoneNumber      graphql.String
+		// EndUserSecondNumber     graphql.String
+		TimestampRequest   graphql.Int
+		TimestampFulfilled graphql.Int
+		RedeemCode         graphql.String
+		Receipt            graphql.String
+		ErrorMessage       graphql.String
+		Status             graphql.String
+	} `graphql:"purchases(filter: {id: $orderId})"`
 }

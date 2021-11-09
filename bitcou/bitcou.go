@@ -46,7 +46,10 @@ func (b *Bitcou) Products(prodInfo ...string) (interface{}, error) {
 		return compactProductsQuery.Products, nil
 	} else if prodInfo[0] == SINGULAR_PRODUCT {
 		log.Println("product id to retrieve: ", prodInfo[1])
-		err := b.client.Query(context.Background(), &singularProductQuery, nil)
+		variables := map[string]interface{}{
+			"prodId": graphql.ID(prodInfo[1]),
+		}
+		err := b.client.Query(context.Background(), &singularProductQuery, variables)
 		if err != nil {
 			log.Println("gql::products::error ", err)
 			return nil, err
@@ -72,6 +75,32 @@ func (b *Bitcou) AccountInfo(info string) (interface{}, error) {
 			return nil, err
 		}
 		return accountBalanceQuery.AccountInfo, nil
+	} else {
+		return nil, nil
+	}
+}
+
+func (b *Bitcou) Purchases(info string, purchaseInfo PurchaseInput, id string) (interface{}, error) {
+	if info == CREATE_ORDER {
+		variables := map[string]interface{}{
+			"purchaseInput": purchaseInfo,
+		}
+		err := b.client.Mutate(context.Background(), &createPurchaseQuery, variables)
+		if err != nil {
+			log.Println("gql::purchases::error ", err)
+			return nil, err
+		}
+		return createPurchaseQuery.CreatePurchase, nil
+	} else if info == GET_ORDER {
+		variables := map[string]interface{}{
+			"orderId": graphql.ID(id),
+		}
+		err := b.client.Query(context.Background(), &getPurchaseQuery, variables)
+		if err != nil {
+			log.Println("gql::purchases::error ", err)
+			return nil, err
+		}
+		return getPurchaseQuery.Purchases[0], nil
 	} else {
 		return nil, nil
 	}

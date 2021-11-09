@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/bitcou/bitcou-wrapper/bitcou"
@@ -18,12 +20,20 @@ func NewBitcouController() *BitcouController {
 }
 
 func (b *BitcouController) CreateOrder(c *gin.Context) {
-	// orderInfo, err := b.client.CreateOrder()
-	// if err != nil {
-	// 	c.IndentedJSON(http.StatusInternalServerError, nil)
-	// 	return
-	// }
-	// c.IndentedJSON(http.StatusOK, orderInfo)
+	body := c.Request.Body
+	value, err := ioutil.ReadAll(body)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+	var purchaseInput bitcou.PurchaseInput
+	err = json.Unmarshal(value, &purchaseInput)
+	orderInfo, err := b.client.Purchases(bitcou.CREATE_ORDER, purchaseInput, "")
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+	c.IndentedJSON(http.StatusOK, orderInfo)
 }
 
 func (b *BitcouController) GetVouchers(c *gin.Context) {
@@ -73,11 +83,11 @@ func (b *BitcouController) GetVoucher(c *gin.Context) {
 }
 
 func (b *BitcouController) GetOrder(c *gin.Context) {
-	// orderId := c.Param("orderId")
-	// order, err := b.client.GetOrder(orderId)
-	// if err != nil {
-	// 	c.IndentedJSON(http.StatusInternalServerError, nil)
-	// 	return
-	// }
-	// c.IndentedJSON(http.StatusOK, order)
+	orderId := c.Param("orderId")
+	order, err := b.client.Purchases(bitcou.GET_ORDER, *new(bitcou.PurchaseInput), orderId)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+	c.IndentedJSON(http.StatusOK, order)
 }

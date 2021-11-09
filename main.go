@@ -31,7 +31,7 @@ func GetApp() *gin.Engine {
 
 func ApplyRoutes(r *gin.Engine) {
 	bc := controllers.NewBitcouController()
-	api := r.Group("/")
+	api := r.Group("/bitcou/")
 	{
 		api.POST("order", bc.CreateOrder)
 		api.GET("vouchers", bc.GetVouchers)
@@ -39,7 +39,7 @@ func ApplyRoutes(r *gin.Engine) {
 		api.GET("account", bc.GetAccountInfo)
 		api.GET("account/balance", bc.GetAccountBalance)
 		api.GET("vouchers/:voucherId", bc.GetVoucher)
-		api.GET("orders/:orderId", bc.GetOrder)
+		api.GET("order/:orderId", bc.GetOrder)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
