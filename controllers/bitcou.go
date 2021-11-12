@@ -74,7 +74,7 @@ func (b *BitcouController) GetAccountBalance(c *gin.Context) {
 
 func (b *BitcouController) GetVoucher(c *gin.Context) {
 	voucherId := c.Param("voucherId")
-	voucher, err := b.client.Products(bitcou.SINGULAR_PRODUCT, voucherId)
+	voucher, err := b.client.Products(bitcou.SINGLE_PRODUCT, voucherId)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, nil)
 		return

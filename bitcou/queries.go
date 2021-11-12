@@ -6,7 +6,7 @@ import "github.com/hasura/go-graphql-client"
 const (
 	FULL_PRODUCTS    string = "FULL"
 	COMPACT_PRODUCTS        = "COMPACT"
-	SINGULAR_PRODUCT        = "SINGULAR_PRODUCT"
+	SINGLE_PRODUCT          = "SINGLE_PRODUCT"
 )
 
 var productsQuery struct {
@@ -112,7 +112,7 @@ var compactProductsQuery struct {
 	} `graphql:"products"`
 }
 
-var singularProductQuery struct {
+var singleProductQuery struct {
 	Products []struct {
 		ID                       graphql.String
 		Available                graphql.Boolean

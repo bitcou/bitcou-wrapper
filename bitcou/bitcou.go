@@ -44,17 +44,17 @@ func (b *Bitcou) Products(prodInfo ...string) (interface{}, error) {
 			return nil, err
 		}
 		return compactProductsQuery.Products, nil
-	} else if prodInfo[0] == SINGULAR_PRODUCT {
+	} else if prodInfo[0] == SINGLE_PRODUCT {
 		log.Println("product id to retrieve: ", prodInfo[1])
 		variables := map[string]interface{}{
 			"prodId": graphql.ID(prodInfo[1]),
 		}
-		err := b.client.Query(context.Background(), &singularProductQuery, variables)
+		err := b.client.Query(context.Background(), &singleProductQuery, variables)
 		if err != nil {
 			log.Println("gql::products::error ", err)
 			return nil, err
 		}
-		return singularProductQuery.Products[0], nil
+		return singleProductQuery.Products[0], nil
 	} else {
 		return nil, nil
 	}
