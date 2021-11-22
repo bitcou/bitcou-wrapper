@@ -21,6 +21,7 @@ type Bitcou struct {
 func NewBitcou(apiKey string, dev bool) *Bitcou {
 	b := new(Bitcou)
 	log.Println(fmt.Sprintf("Initializing Bitcou Client with API Key: %s", apiKey))
+	fmt.Println(fmt.Sprintf("Initializing Bitcou Client with API Key: %s", apiKey))
 	b.apiKey = apiKey
 	if dev {
 		b.URL = "https://sandbox-bitcou.kindynos.com/query"
