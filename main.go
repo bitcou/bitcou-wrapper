@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"net/http"
 	"os"
@@ -11,8 +12,9 @@ import (
 )
 
 func init()  {
-	err := godotenv.Load()
+	err := godotenv.Load(".env")
 	if err != nil {
+		fmt.Println("error loading .env ", err.Error())
 		return 
 	}
 }
