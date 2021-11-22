@@ -82,13 +82,11 @@ func (b *BlockchainController) Decrypt(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, jsonMap)
 }
 
-
-
 func (b *BlockchainController) encryptData(data []byte) ([]byte, error) {
 	gcm, err := b.createGCM()
 	if err != nil {
 		return nil, err
-    }
+	}
 	nonce := make([]byte, gcm.NonceSize())
 	_, err = io.ReadFull(rand.Reader, nonce)
 	if err != nil {
@@ -99,27 +97,27 @@ func (b *BlockchainController) encryptData(data []byte) ([]byte, error) {
 }
 
 func (b *BlockchainController) decryptData(data []byte) ([]byte, error) {
-    gcm, err := b.createGCM()
+	gcm, err := b.createGCM()
 	if err != nil {
 		return nil, err
-    }
-    nonceSize := gcm.NonceSize()
-    nonce, ciphertext := data[:nonceSize], data[nonceSize:]
-    plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
-    if err != nil {
+	}
+	nonceSize := gcm.NonceSize()
+	nonce, ciphertext := data[:nonceSize], data[nonceSize:]
+	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
 		return nil, err
-    }
-    return plaintext, nil
+	}
+	return plaintext, nil
 }
 
 func (b *BlockchainController) createGCM() (cipher.AEAD, error) {
 	block, err := aes.NewCipher(b.key)
-    if err != nil {
+	if err != nil {
 		return nil, err
-    }
-    gcm, err := cipher.NewGCM(block)
-    if err != nil {
+	}
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
 		return nil, err
-    }
+	}
 	return gcm, nil
 }
