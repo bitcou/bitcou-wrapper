@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/bitcou/bitcou-wrapper/bitcou"
 	"github.com/gin-gonic/gin"
@@ -15,7 +16,7 @@ type BitcouController struct {
 
 func NewBitcouController() *BitcouController {
 	bc := new(BitcouController)
-	bc.client = bitcou.NewBitcou("", true)
+	bc.client = bitcou.NewBitcou(os.Getenv("BITCOU_APIKEY"), true)
 	return bc
 }
 
