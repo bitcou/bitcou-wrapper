@@ -1,11 +1,12 @@
 package main
 
 import (
+	"net/http"
+	"os"
+
 	"github.com/bitcou/bitcou-wrapper/controllers"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"os"
 )
 
 func main() {
@@ -30,9 +31,15 @@ func GetApp() *gin.Engine {
 
 func ApplyRoutes(r *gin.Engine) {
 	bc := controllers.NewBitcouController()
-	api := r.Group("/")
+	api := r.Group("/bitcou/")
 	{
-		api.GET("balance", bc.GetAccountBalance)
+		api.POST("order", bc.CreateOrder)
+		api.GET("vouchers", bc.GetVouchers)
+		api.GET("vouchers/compact", bc.GetCompactVouchers)
+		api.GET("account", bc.GetAccountInfo)
+		api.GET("account/balance", bc.GetAccountBalance)
+		api.GET("vouchers/:voucherId", bc.GetVoucher)
+		api.GET("order/:orderId", bc.GetOrder)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
