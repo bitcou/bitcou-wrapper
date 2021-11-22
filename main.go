@@ -31,15 +31,22 @@ func GetApp() *gin.Engine {
 
 func ApplyRoutes(r *gin.Engine) {
 	bc := controllers.NewBitcouController()
-	api := r.Group("/bitcou/")
+	apiBitcou := r.Group("/bitcou/")
 	{
-		api.POST("order", bc.CreateOrder)
-		api.GET("vouchers", bc.GetVouchers)
-		api.GET("vouchers/compact", bc.GetCompactVouchers)
-		api.GET("account", bc.GetAccountInfo)
-		api.GET("account/balance", bc.GetAccountBalance)
-		api.GET("vouchers/:voucherId", bc.GetVoucher)
-		api.GET("order/:orderId", bc.GetOrder)
+		apiBitcou.POST("order", bc.CreateOrder)
+		apiBitcou.GET("vouchers", bc.GetVouchers)
+		apiBitcou.GET("vouchers/compact", bc.GetCompactVouchers)
+		apiBitcou.GET("account", bc.GetAccountInfo)
+		apiBitcou.GET("account/balance", bc.GetAccountBalance)
+		apiBitcou.GET("vouchers/:voucherId", bc.GetVoucher)
+		apiBitcou.GET("order/:orderId", bc.GetOrder)
+	}
+
+	bl := controllers.NewBlockchainController()
+	apiBlockchain := r.Group("/blockchain/")
+	{
+		apiBlockchain.POST("encrypt", bl.Encrypt)
+		apiBlockchain.POST("decrypt", bl.Decrypt)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
