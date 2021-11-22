@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"net/http"
 	"os"
 
@@ -8,6 +9,13 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
+
+func init()  {
+	err := godotenv.Load()
+	if err != nil {
+		return 
+	}
+}
 
 func main() {
 	port := os.Getenv("PORT")
