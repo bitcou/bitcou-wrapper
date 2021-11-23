@@ -11,9 +11,9 @@ const (
 
 var catalogQuery struct {
 	Brand []struct {
-		VariantID graphql.String `json:"variantID"`
+		VariantID graphql.String `graphql:"variantID"`
+		BrandImageURL graphql.String `graphql:"brandImageURL"`
 		BrandName graphql.String
-		BrandImageURL graphql.String `json:"brandImageURL"`
 		Products []struct {
 			ID                       graphql.String
 			Available                graphql.Boolean
@@ -41,20 +41,6 @@ var catalogQuery struct {
 			IsPremium                graphql.Boolean
 			Locale                   graphql.String
 			OnlineTc                 graphql.String
-			// OriginalID               graphql.String
-			MetaProvider struct {
-				ID   graphql.String
-				Name graphql.String
-			}
-			Provider struct {
-				ID               graphql.String
-				Image            graphql.String
-				Name             graphql.String
-				OriginalID       graphql.String
-				CustomName       graphql.String
-				CustomImage      graphql.String
-				ValidationNumber graphql.String
-			}
 			RedeemInstructions   graphql.String
 			CustomInstructions   graphql.String
 			RedeemSite           graphql.String
