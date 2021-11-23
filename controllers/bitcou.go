@@ -55,6 +55,15 @@ func (b *BitcouController) GetCompactVouchers(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, vouchers)
 }
 
+func (b *BitcouController) GetCatalog(c *gin.Context) {
+	vouchers, err := b.client.Catalog()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+	c.IndentedJSON(http.StatusOK, vouchers)
+}
+
 func (b *BitcouController) GetAccountInfo(c *gin.Context) {
 	accountInfo, err := b.client.AccountInfo(bitcou.ACCOUNT_INFO)
 	if err != nil {

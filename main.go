@@ -11,11 +11,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func init()  {
+func init() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Println("error loading .env ", err.Error())
-		return 
+		return
 	}
 }
 
@@ -46,6 +46,7 @@ func ApplyRoutes(r *gin.Engine) {
 		apiBitcou.POST("order", bc.CreateOrder)
 		apiBitcou.GET("vouchers", bc.GetVouchers)
 		apiBitcou.GET("vouchers/compact", bc.GetCompactVouchers)
+		apiBitcou.GET("vouchers/catalog", bc.GetCatalog)
 		apiBitcou.GET("account", bc.GetAccountInfo)
 		apiBitcou.GET("account/balance", bc.GetAccountBalance)
 		apiBitcou.GET("vouchers/:voucherId", bc.GetVoucher)
