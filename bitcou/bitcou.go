@@ -2,7 +2,6 @@ package bitcou
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -20,8 +19,6 @@ type Bitcou struct {
 
 func NewBitcou(apiKey string, dev bool) *Bitcou {
 	b := new(Bitcou)
-	log.Println(fmt.Sprintf("Initializing Bitcou Client with API Key: %s", apiKey))
-	fmt.Println(fmt.Sprintf("Initializing Bitcou Client with API Key: %s", apiKey))
 	b.apiKey = apiKey
 	if dev {
 		b.URL = "https://sandbox-bitcou.kindynos.com/query"
@@ -30,6 +27,15 @@ func NewBitcou(apiKey string, dev bool) *Bitcou {
 	}
 	b.client = b.newBitcouClient()
 	return b
+}
+
+func (b *Bitcou) Catalog() (interface{}, error) {
+	err := b.client.Query(context.Background(), &catalogQuery, nil)
+	if err != nil {
+		log.Println("gql::products::error ", err)
+		return nil, err
+	}
+	return catalogQuery.Brand, nil
 }
 
 func (b *Bitcou) Products(prodInfo ...string) (interface{}, error) {
