@@ -11,10 +11,10 @@ const (
 
 var catalogQuery struct {
 	Brand []struct {
-		VariantID graphql.String `graphql:"variantID"`
+		VariantID     graphql.String `graphql:"variantID"`
 		BrandImageURL graphql.String `graphql:"brandImageURL"`
-		BrandName graphql.String
-		Products []struct {
+		BrandName     graphql.String
+		Products      []struct {
 			ID                       graphql.String
 			Available                graphql.Boolean
 			Description              graphql.String
@@ -41,19 +41,19 @@ var catalogQuery struct {
 			IsPremium                graphql.Boolean
 			Locale                   graphql.String
 			OnlineTc                 graphql.String
-			RedeemInstructions   graphql.String
-			CustomInstructions   graphql.String
-			RedeemSite           graphql.String
-			CustomRedeemSite     graphql.String
-			RequireMail          graphql.Boolean
-			RequirePhone         graphql.Boolean
-			RequireOther         graphql.Boolean
-			RequiresUserIdentity graphql.Boolean
-			Tc                   graphql.String
-			CustomOnlineTc       graphql.String
-			URLImage             graphql.String
-			CustomURLImage       graphql.String
-			Countries            []struct {
+			RedeemInstructions       graphql.String
+			CustomInstructions       graphql.String
+			RedeemSite               graphql.String
+			CustomRedeemSite         graphql.String
+			RequireMail              graphql.Boolean
+			RequirePhone             graphql.Boolean
+			RequireOther             graphql.Boolean
+			RequiresUserIdentity     graphql.Boolean
+			Tc                       graphql.String
+			CustomOnlineTc           graphql.String
+			URLImage                 graphql.String
+			CustomURLImage           graphql.String
+			Countries                []struct {
 				ID   graphql.String
 				Name graphql.String
 			}
@@ -314,9 +314,9 @@ var accountBalanceQuery struct {
 }
 
 type ProductFilter struct {
-	Id graphql.ID `json:"id"`
-	Country graphql.String `json:"country"`
-	Category graphql.ID `json:"category"`
+	Id       graphql.ID     `json:"id"`
+	Country  graphql.String `json:"country"`
+	Category graphql.ID     `json:"category"`
 }
 
 // Queries for purchases
