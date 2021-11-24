@@ -29,8 +29,27 @@ func NewBitcou(apiKey string, dev bool) *Bitcou {
 	return b
 }
 
-func (b *Bitcou) Catalog() (interface{}, error) {
-	err := b.client.Query(context.Background(), &catalogQuery, nil)
+func (b *Bitcou) Catalog(id int, country string, category int) (interface{}, error) {
+	variables := make(map[string]interface{})
+	filter := ProductFilter{
+		Id:       graphql.ID(nil),
+		Country:  graphql.String(""),
+		Category: graphql.ID(nil),
+	}
+	//mapFilters := make(map[string]interface{})
+	if id != 0 {
+		filter.Id = graphql.ID(id)
+	}
+	if country != "" {
+		filter.Country = graphql.String(country)
+	}
+	if category != 0 {
+		filter.Category = graphql.ID(category)
+	}
+
+	variables["filter"] = filter
+
+	err := b.client.Query(context.Background(), &catalogQuery, variables)
 	if err != nil {
 		log.Println("gql::products::error ", err)
 		return nil, err
