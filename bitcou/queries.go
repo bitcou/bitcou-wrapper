@@ -76,7 +76,7 @@ var catalogQuery struct {
 			VariantName        graphql.String
 			Validity           graphql.String
 		}
-	} `graphql:"catalog"`
+	} `graphql:"catalog(filter: $filter)"`
 }
 
 var productsQuery struct {
@@ -311,6 +311,12 @@ var accountBalanceQuery struct {
 	AccountInfo struct {
 		Balance graphql.Float
 	}
+}
+
+type ProductFilter struct {
+	Id graphql.ID `json:"id"`
+	Country graphql.String `json:"country"`
+	Category graphql.ID `json:"category"`
 }
 
 // Queries for purchases
