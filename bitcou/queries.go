@@ -107,8 +107,8 @@ var productsQuery struct {
 		IsPremium                graphql.Boolean
 		Locale                   graphql.String
 		OnlineTc                 graphql.String
-		// OriginalID               graphql.String
-		MetaProvider struct {
+		OriginalID               graphql.String `graphql:"originalID"`
+		MetaProvider             struct {
 			ID   graphql.String
 			Name graphql.String
 		}
@@ -155,7 +155,6 @@ var productsQuery struct {
 		RecommendedAmounts graphql.String
 		VariantName        graphql.String
 		Validity           graphql.String
-		// } `graphql:"products(limit: 3)"`
 	} `graphql:"products"`
 }
 
@@ -178,7 +177,6 @@ var compactProductsQuery struct {
 		CustomURLImage   graphql.String
 		IsVariant        graphql.Boolean
 		VariantProductID graphql.String
-		// } `graphql:"products(limit: 3)"`
 	} `graphql:"products"`
 }
 
@@ -210,8 +208,8 @@ var singleProductQuery struct {
 		IsPremium                graphql.Boolean
 		Locale                   graphql.String
 		OnlineTc                 graphql.String
-		// OriginalID               graphql.String
-		MetaProvider struct {
+		OriginalID               graphql.String `graphql:"originalID"`
+		MetaProvider             struct {
 			ID   graphql.String
 			Name graphql.String
 		}
@@ -269,16 +267,16 @@ const (
 
 var accountInfoQuery struct {
 	AccountInfo struct {
-		ID            graphql.String
-		Name          graphql.String
-		AddressStreet graphql.String
-		// AddressPC       graphql.Int
-		AddressCity    graphql.String
-		AddressState   graphql.String
-		AddressCountry graphql.String
-		MonthlyFee     graphql.Int
-		Tc             graphql.String
-		// BusinessTaxID   graphql.String
+		ID              graphql.String
+		Name            graphql.String
+		AddressStreet   graphql.String
+		AddressPC       graphql.Int `graphql:"addressPC"`
+		AddressCity     graphql.String
+		AddressState    graphql.String
+		AddressCountry  graphql.String
+		MonthlyFee      graphql.Int
+		Tc              graphql.String
+		BusinessTaxID   graphql.String `graphql:"businessTaxID"`
 		ContactName     graphql.String
 		ContactLastName graphql.String
 		ContactTitle    graphql.String
@@ -287,22 +285,22 @@ var accountInfoQuery struct {
 		UserName        graphql.String
 		Balance         graphql.Float
 		Movements       []struct {
-			Amount graphql.Float
-			// ClientID     graphql.String
+			Amount       graphql.Float
+			ClientID     graphql.String `graphql:"clientID"`
 			ID           graphql.String
 			MovementType graphql.String
 			Note         graphql.String
-			// PurchaseID   graphql.String
-			Reference graphql.String
-			Timestamp graphql.Int
+			PurchaseID   graphql.String `graphql:"purchaseID"`
+			Reference    graphql.String
+			Timestamp    graphql.Int
 		}
 		Provision graphql.Int
 		APIKeys   []struct {
-			ID      graphql.String
-			Key     graphql.String
-			IsDev   graphql.Boolean
-			IsAdmin graphql.Boolean
-			// AllowedIP graphql.String
+			ID        graphql.String
+			Key       graphql.String
+			IsDev     graphql.Boolean
+			IsAdmin   graphql.Boolean
+			AllowedIP graphql.String `graphql:"allowedIP"`
 		}
 	}
 }
@@ -341,50 +339,112 @@ type PurchaseInput struct {
 
 var createPurchaseQuery struct {
 	CreatePurchase struct {
-		ID graphql.String
-		// TransactionID graphql.String
-		Client struct {
+		ID            graphql.String
+		TransactionID graphql.String
+		Client        struct {
 			ID   graphql.String
 			Name graphql.String
 		}
-		TotalValue    graphql.Float
-		OriginalValue graphql.Float
-		// EndUserName             graphql.String
-		// EndUserEmail            graphql.String
-		// EndUserCountry          graphql.String
-		// EndUserPhoneCountryCode graphql.String
-		// EndUserPhoneNumber      graphql.String
-		// EndUserSecondNumber     graphql.String
-		TimestampRequest   graphql.Int
-		TimestampFulfilled graphql.Int
-		RedeemCode         graphql.String
-		Receipt            graphql.String
-		ErrorMessage       graphql.String
-		Status             graphql.String
+		TotalValue              graphql.Float
+		OriginalValue           graphql.Float
+		EndUserName             graphql.String `graphql:"EndUserName"`
+		EndUserEmail            graphql.String `graphql:"EndUserEmail"`
+		EndUserCountry          graphql.String `graphql:"EndUserCountry"`
+		EndUserPhoneCountryCode graphql.String `graphql:"EndUserPhoneCountryCode"`
+		EndUserPhoneNumber      graphql.String `graphql:"EndUserPhoneNumber"`
+		EndUserSecondNumber     graphql.String `graphql:"EndUserSecondNumber"`
+		TimestampRequest        graphql.Int
+		TimestampFulfilled      graphql.Int
+		RedeemCode              graphql.String
+		Receipt                 graphql.String
+		ErrorMessage            graphql.String
+		Status                  graphql.String
 	} `graphql:"createPurchase(purchase: $purchaseInput)"`
 }
 
 var getPurchaseQuery struct {
 	Purchases []struct {
-		ID graphql.String
-		// TransactionID graphql.String
-		Client struct {
+		ID            graphql.String
+		TransactionID graphql.String `graphql:"transactionID"`
+		Client        struct {
 			ID   graphql.String
 			Name graphql.String
 		}
-		TotalValue    graphql.Int
-		OriginalValue graphql.Int
-		// EndUserName             graphql.String
-		// EndUserEmail            graphql.String
-		// EndUserCountry          graphql.String
-		// EndUserPhoneCountryCode graphql.String
-		// EndUserPhoneNumber      graphql.String
-		// EndUserSecondNumber     graphql.String
-		TimestampRequest   graphql.Int
-		TimestampFulfilled graphql.Int
-		RedeemCode         graphql.String
-		Receipt            graphql.String
-		ErrorMessage       graphql.String
-		Status             graphql.String
+		TotalValue              graphql.Int
+		OriginalValue           graphql.Int
+		EndUserName             graphql.String `graphql:"EndUserName"`
+		EndUserEmail            graphql.String `graphql:"EndUserEmail"`
+		EndUserCountry          graphql.String `graphql:"EndUserCountry"`
+		EndUserPhoneCountryCode graphql.String `graphql:"EndUserPhoneCountryCode"`
+		EndUserPhoneNumber      graphql.String `graphql:"EndUserPhoneNumber"`
+		EndUserSecondNumber     graphql.String `graphql:"EndUserSecondNumber"`
+		TimestampRequest        graphql.Int
+		TimestampFulfilled      graphql.Int
+		RedeemCode              graphql.String
+		Receipt                 graphql.String
+		ErrorMessage            graphql.String
+		Status                  graphql.String
 	} `graphql:"purchases(filter: {id: $orderId})"`
+}
+
+// QUERIES FOR COUNTRIES
+var getCountries struct {
+	Countries []struct {
+		ID   graphql.String
+		Name graphql.String
+		// Products []struct {
+		// 	ID             graphql.String
+		// 	Available      graphql.Boolean
+		// 	Currency       graphql.String
+		// 	FixedPrice     graphql.Float
+		// 	FullName       graphql.String
+		// 	CustomFullName graphql.String
+		// 	RedeemSite       graphql.String
+		// 	URLImage         graphql.String
+		// 	CustomURLImage   graphql.String
+		// 	IsVariant        graphql.Boolean
+		// 	VariantProductID graphql.String
+		// }
+	} `graphql:"countries(filter: {id: $countryId})"`
+}
+
+// QUERIES FOR CATEGORIES
+var getCategoriesFilter struct {
+	Categories []struct {
+		ID   graphql.String
+		Name graphql.String
+		// Products []struct {
+		// 	ID             graphql.String
+		// 	Available      graphql.Boolean
+		// 	Currency       graphql.String
+		// 	FixedPrice     graphql.Float
+		// 	FullName       graphql.String
+		// 	CustomFullName graphql.String
+		// 	RedeemSite       graphql.String
+		// 	URLImage         graphql.String
+		// 	CustomURLImage   graphql.String
+		// 	IsVariant        graphql.Boolean
+		// 	VariantProductID graphql.String
+		// }
+	} `graphql:"categories(filter: {id: $categoryId})"`
+}
+
+var getCategories struct {
+	Categories []struct {
+		ID   graphql.String
+		Name graphql.String
+		// Products []struct {
+		// 	ID             graphql.String
+		// 	Available      graphql.Boolean
+		// 	Currency       graphql.String
+		// 	FixedPrice     graphql.Float
+		// 	FullName       graphql.String
+		// 	CustomFullName graphql.String
+		// 	RedeemSite       graphql.String
+		// 	URLImage         graphql.String
+		// 	CustomURLImage   graphql.String
+		// 	IsVariant        graphql.Boolean
+		// 	VariantProductID graphql.String
+		// }
+	} `graphql:"categories"`
 }

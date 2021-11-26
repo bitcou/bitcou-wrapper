@@ -125,3 +125,23 @@ func (b *BitcouController) GetOrder(c *gin.Context) {
 	}
 	c.IndentedJSON(http.StatusOK, order)
 }
+
+func (b *BitcouController) GetCountries(c *gin.Context) {
+	countryId := c.Param("countryId")
+	countries, err := b.client.Countries(countryId)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+	c.IndentedJSON(http.StatusOK, countries)
+}
+
+func (b *BitcouController) GetCategories(c *gin.Context) {
+	categoryId := c.Param("categoryId")
+	categories, err := b.client.Categories(categoryId)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+	c.IndentedJSON(http.StatusOK, categories)
+}

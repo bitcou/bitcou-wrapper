@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"net/http"
 	"os"
+
+	"github.com/joho/godotenv"
 
 	"github.com/bitcou/bitcou-wrapper/controllers"
 	"github.com/gin-contrib/cors"
@@ -51,6 +52,10 @@ func ApplyRoutes(r *gin.Engine) {
 		apiBitcou.GET("account/balance", bc.GetAccountBalance)
 		apiBitcou.GET("vouchers/:voucherId", bc.GetVoucher)
 		apiBitcou.GET("order/:orderId", bc.GetOrder)
+		apiBitcou.GET("countries", bc.GetCountries)
+		apiBitcou.GET("countries/:countryId", bc.GetCountries)
+		apiBitcou.GET("categories", bc.GetCategories)
+		apiBitcou.GET("categories/:categoryId", bc.GetCategories)
 	}
 
 	bl := controllers.NewBlockchainController()
