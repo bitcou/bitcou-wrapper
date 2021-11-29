@@ -134,6 +134,44 @@ func (b *Bitcou) Purchases(info string, purchaseInfo PurchaseInput, id string) (
 	}
 }
 
+func (b *Bitcou) Countries(id string) (interface{}, error) {
+	variables := map[string]interface{}{
+		"countryId": graphql.String(id),
+	}
+	err := b.client.Query(context.Background(), &getCountries, variables)
+	if err != nil {
+		log.Println("gql::products::error ", err)
+		return nil, err
+	}
+	if id != "" {
+		return getCountries.Countries[0], nil
+	} else {
+		return getCountries.Countries, nil
+	}
+}
+
+func (b *Bitcou) Categories(id string) (interface{}, error) {
+	var err error
+	if id == "" {
+		err = b.client.Query(context.Background(), &getCategories, nil)
+		if err != nil {
+			log.Println("gql::products::error ", err)
+			return nil, err
+		}
+		return getCategories.Categories, nil
+	} else {
+		variables := map[string]interface{}{
+			"categoryId": graphql.ID(id),
+		}
+		err = b.client.Query(context.Background(), &getCategoriesFilter, variables)
+		if err != nil {
+			log.Println("gql::products::error ", err)
+			return nil, err
+		}
+		return getCategoriesFilter.Categories[0], nil
+	}
+}
+
 type MyRoundTripper struct {
 	r http.RoundTripper
 }
