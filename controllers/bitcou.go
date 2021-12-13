@@ -58,19 +58,11 @@ func (b *BitcouController) GetCompactVouchers(c *gin.Context) {
 }
 
 func (b *BitcouController) GetCatalog(c *gin.Context) {
-	id := c.Query("id")
+	variantProductID := c.Query("variantId")
 	country := c.Query("country")
 	category := c.Query("category")
-	prodId := 0
 	categoryNumeric := 0
 	var err error
-	if id != "" {
-		prodId, err = strconv.Atoi(id)
-		if err != nil {
-			c.IndentedJSON(http.StatusBadRequest, errors.New("invalid product id"))
-			return
-		}
-	}
 
 	if category != "" {
 		categoryNumeric, err = strconv.Atoi(category)
@@ -80,7 +72,7 @@ func (b *BitcouController) GetCatalog(c *gin.Context) {
 		}
 	}
 
-	vouchers, err := b.client.Catalog(prodId, country, categoryNumeric)
+	vouchers, err := b.client.Catalog(variantProductID, country, categoryNumeric)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, nil)
 		return

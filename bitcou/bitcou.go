@@ -29,16 +29,16 @@ func NewBitcou(apiKey string, dev bool) *Bitcou {
 	return b
 }
 
-func (b *Bitcou) Catalog(id int, country string, category int) (interface{}, error) {
+func (b *Bitcou) Catalog(variantProductID string, country string, category int) (interface{}, error) {
 	variables := make(map[string]interface{})
-	filter := ProductFilter{
-		Id:       graphql.ID(nil),
-		Country:  graphql.String(""),
-		Category: graphql.ID(nil),
+	filter := CatalogFilter{
+		VariantProductID: graphql.String(""),
+		Country:          graphql.String(""),
+		Category:         graphql.ID(nil),
 	}
 	//mapFilters := make(map[string]interface{})
-	if id != 0 {
-		filter.Id = graphql.ID(id)
+	if variantProductID != "" {
+		filter.VariantProductID = graphql.String(variantProductID)
 	}
 	if country != "" {
 		filter.Country = graphql.String(country)

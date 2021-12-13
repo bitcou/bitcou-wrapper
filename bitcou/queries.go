@@ -317,6 +317,12 @@ type ProductFilter struct {
 	Category graphql.ID     `json:"category"`
 }
 
+type CatalogFilter struct {
+	VariantProductID graphql.String `json:"variantProductID"`
+	Country          graphql.String `json:"country"`
+	Category         graphql.ID     `json:"category"`
+}
+
 // Queries for purchases
 const (
 	CREATE_ORDER string = "CREATE_ORDER"
