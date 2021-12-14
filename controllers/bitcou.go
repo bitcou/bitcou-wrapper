@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -29,9 +28,7 @@ func (b *BitcouController) CreateOrder(c *gin.Context) {
 		c.IndentedJSON(http.StatusInternalServerError, nil)
 		return
 	}
-	var purchaseInput bitcou.PurchaseInput
-	err = json.Unmarshal(value, &purchaseInput)
-	orderInfo, err := b.client.Purchases(bitcou.CREATE_ORDER, purchaseInput, "")
+	orderInfo, err := b.client.Purchases(bitcou.CREATE_ORDER, value, "")
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, nil)
 		return
@@ -110,7 +107,7 @@ func (b *BitcouController) GetVoucher(c *gin.Context) {
 
 func (b *BitcouController) GetOrder(c *gin.Context) {
 	orderId := c.Param("orderId")
-	order, err := b.client.Purchases(bitcou.GET_ORDER, *new(bitcou.PurchaseInput), orderId)
+	order, err := b.client.Purchases(bitcou.GET_ORDER, []byte(""), orderId)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, nil)
 		return

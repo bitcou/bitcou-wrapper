@@ -346,7 +346,7 @@ type PurchaseInput struct {
 var createPurchaseQuery struct {
 	CreatePurchase struct {
 		ID            graphql.String
-		TransactionID graphql.String
+		TransactionID graphql.String `graphql:"transactionID"`
 		Client        struct {
 			ID   graphql.String
 			Name graphql.String
