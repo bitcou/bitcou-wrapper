@@ -2,10 +2,13 @@ package bitcou
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 
+	wrap_err "github.com/bitcou/bitcou-wrapper/errors"
+	"github.com/bitcou/bitcou-wrapper/utils"
 	"github.com/hasura/go-graphql-client"
 	"github.com/joho/godotenv"
 )
@@ -20,6 +23,7 @@ type Bitcou struct {
 func NewBitcou(apiKey string, dev bool) *Bitcou {
 	b := new(Bitcou)
 	b.apiKey = apiKey
+	b.dev = dev
 	if dev {
 		b.URL = "https://sandbox-bitcou.kindynos.com/query"
 	} else {
@@ -73,7 +77,6 @@ func (b *Bitcou) Products(prodInfo ...string) (interface{}, error) {
 		}
 		return compactProductsQuery.Products, nil
 	} else if prodInfo[0] == SINGLE_PRODUCT {
-		log.Println("product id to retrieve: ", prodInfo[1])
 		variables := map[string]interface{}{
 			"prodId": graphql.ID(prodInfo[1]),
 		}
@@ -82,7 +85,11 @@ func (b *Bitcou) Products(prodInfo ...string) (interface{}, error) {
 			log.Println("gql::products::error ", err)
 			return nil, err
 		}
-		return singleProductQuery.Products[0], nil
+		if len(singleProductQuery.Products) > 0 {
+			return singleProductQuery.Products[0], nil
+		} else {
+			return nil, wrap_err.ErrorProductNotFound
+		}
 	} else {
 		return nil, nil
 	}
@@ -108,18 +115,31 @@ func (b *Bitcou) AccountInfo(info string) (interface{}, error) {
 	}
 }
 
-func (b *Bitcou) Purchases(info string, purchaseInfo PurchaseInput, id string) (interface{}, error) {
-	if info == CREATE_ORDER {
-		variables := map[string]interface{}{
-			"purchaseInput": purchaseInfo,
+func (b *Bitcou) Purchases(option string, purchaseInfo []byte, id string) (interface{}, error) {
+	if option == CREATE_ORDER {
+		plainText, err := utils.DecryptInit(purchaseInfo)
+		if err != nil {
+			log.Println("gql::purchases::error ", err)
+			return nil, err
 		}
-		err := b.client.Mutate(context.Background(), &createPurchaseQuery, variables)
+		var input PurchaseInput
+		err = json.Unmarshal(plainText, &input)
+		if err != nil {
+			log.Println("gql::purchases::error ", err)
+			return nil, err
+		}
+		// log.Println("input", input)
+		// log.Println("\n\n\tinputJson", string(plainText))
+		variables := map[string]interface{}{
+			"purchaseInput": input,
+		}
+		err = b.client.Mutate(context.Background(), &createPurchaseQuery, variables)
 		if err != nil {
 			log.Println("gql::purchases::error ", err)
 			return nil, err
 		}
 		return createPurchaseQuery.CreatePurchase, nil
-	} else if info == GET_ORDER {
+	} else if option == GET_ORDER {
 		variables := map[string]interface{}{
 			"orderId": graphql.ID(id),
 		}

@@ -49,6 +49,10 @@ func (b *BlockchainController) Encrypt(c *gin.Context) {
 		return
 	}
 	encryptedData, err := b.encryptData(inputJson)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
 	encryptedDataObj := CipherString{
 		CipherStr: encryptedData,
 	}
