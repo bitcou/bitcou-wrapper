@@ -7,10 +7,6 @@ import (
 	"os"
 )
 
-type CipherString struct {
-	CipherStr []byte `json:"cipherStr"`
-}
-
 func CreateGCM() (cipher.AEAD, error) {
 	key := os.Getenv("BLOCKCHAIN_KEY")
 	block, err := aes.NewCipher([]byte(key))
@@ -25,12 +21,8 @@ func CreateGCM() (cipher.AEAD, error) {
 }
 
 func DecryptInit(value []byte) ([]byte, error) {
-	var message CipherString
-	err := json.Unmarshal(value, &message)
-	if err != nil {
-		return nil, err
-	}
-	plainText, err := decryptCipher(message.CipherStr)
+	// var message CipherString
+	plainText, err := decryptCipher(value)
 	if err != nil {
 		return nil, err
 	}
