@@ -3,6 +3,7 @@ package bitcou
 import (
 	"context"
 	"encoding/json"
+	"github.com/bitcou/bitcou-wrapper/models"
 	"log"
 	"net/http"
 	"os"
@@ -117,19 +118,39 @@ func (b *Bitcou) AccountInfo(info string) (interface{}, error) {
 
 func (b *Bitcou) Purchases(option string, purchaseInfo []byte, id string) (interface{}, error) {
 	if option == CREATE_ORDER {
-		plainText, err := utils.DecryptInit(purchaseInfo)
+		var data models.CreateOrderEncryptedInput
+		err := json.Unmarshal(purchaseInfo, &data)
+		if err != nil {
+			return nil, err
+		}
+		userInfoBytes, err := json.Marshal(data.UserInfo)
+		if err != nil {
+			return nil, err
+		}
+		plainText, err := utils.DecryptInit(userInfoBytes)
 		if err != nil {
 			log.Println("gql::purchases::error ", err)
 			return nil, err
 		}
-		var input PurchaseInput
-		err = json.Unmarshal(plainText, &input)
+		input := PurchaseInput{
+			TransactionID: "",
+			ProductID:     0,
+			TotalValue:    0,
+			UserInfo: struct {
+				Email            string `json:"email"`
+				Name             string `json:"name"`
+				Country          string `json:"country"`
+				PhoneCountryCode string `json:"phoneCountryCode"`
+				PhoneNumber      string `json:"phoneNumber"`
+				ServiceNumber    string `json:"serviceNumber"`
+			}{},
+		}
+		err = json.Unmarshal(plainText, &input.UserInfo)
 		if err != nil {
 			log.Println("gql::purchases::error ", err)
 			return nil, err
 		}
-		// log.Println("input", input)
-		// log.Println("\n\n\tinputJson", string(plainText))
+
 		variables := map[string]interface{}{
 			"purchaseInput": input,
 		}
