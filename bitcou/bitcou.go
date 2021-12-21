@@ -123,11 +123,7 @@ func (b *Bitcou) Purchases(option OrderOperations, purchaseInfo []byte, id strin
 		if err != nil {
 			return nil, err
 		}
-		userInfoBytes, err := json.Marshal(data.UserInfo)
-		if err != nil {
-			return nil, err
-		}
-		plainText, err := utils.DecryptInit(userInfoBytes)
+		plainText, err := utils.DecryptInit(data.UserInfo)
 		if err != nil {
 			log.Println("gql::purchases::error ", err)
 			return nil, err
