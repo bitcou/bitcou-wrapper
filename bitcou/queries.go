@@ -324,9 +324,11 @@ type CatalogFilter struct {
 }
 
 // Queries for purchases
+type OrderOperations string
+
 const (
-	CREATE_ORDER string = "CREATE_ORDER"
-	GET_ORDER           = "GET_ORDER"
+	CREATE_ORDER OrderOperations = "CREATE_ORDER"
+	GET_ORDER                    = "GET_ORDER"
 )
 
 type PurchaseInput struct {

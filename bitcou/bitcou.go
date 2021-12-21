@@ -116,7 +116,7 @@ func (b *Bitcou) AccountInfo(info string) (interface{}, error) {
 	}
 }
 
-func (b *Bitcou) Purchases(option string, purchaseInfo []byte, id string) (interface{}, error) {
+func (b *Bitcou) Purchases(option OrderOperations, purchaseInfo []byte, id string) (interface{}, error) {
 	if option == CREATE_ORDER {
 		var data models.CreateOrderEncryptedInput
 		err := json.Unmarshal(purchaseInfo, &data)
