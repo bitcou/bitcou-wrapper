@@ -26,12 +26,12 @@ func NewBitcouController() *BitcouController {
 func (b *BitcouController) CreateOrder(c *gin.Context) {
 	var data = gin.H{
 		"user":    gin.H{"email": "hestia@example.com", "phone": "0101010"},
-		// "data":    gin.H{"email": "data@example.com", "phone": "02020202"},
+		"data":    gin.H{"email": "data@example.com", "phone": "02020202"},
 	}
 	fmt.Println("data: ", data)
 	// authorized:= gin.BasicAuth(gin.Accounts{
 	// 	"hestia": "A7Xm9WbUZG7cT2Au",
-	// 	// "hello": "326363246",
+	// 	"hello": "326363246",
 	// })
 	fakeauthorized:=map[string]string{
 		"hestia": "A7Xm9WbUZG7cT2Au",
@@ -39,7 +39,6 @@ func (b *BitcouController) CreateOrder(c *gin.Context) {
 	}
 		user := ((c.Request.Header["Authorization"])[0])[6:len(c.Request.Header["Authorization"][0])]
 		decodedUser, err := base64.StdEncoding.DecodeString(user)
-		// fmt.Println("fakeauthorized:", fakeauthorized)
 		founded := false;
 		for a,b := range fakeauthorized {
 			s := string(a)+":"+string(b)
