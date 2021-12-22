@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
+	"fmt"
 	"github.com/bitcou/bitcou-wrapper/bitcou"
 	wrap_err "github.com/bitcou/bitcou-wrapper/errors"
 	"github.com/gin-gonic/gin"
@@ -23,6 +23,32 @@ func NewBitcouController() *BitcouController {
 }
 
 func (b *BitcouController) CreateOrder(c *gin.Context) {
+	var data = gin.H{
+		"user":    gin.H{"email": "hestia@example.com", "phone": "0101010"},
+		// "data":    gin.H{"email": "data@example.com", "phone": "02020202"},
+	}
+	fmt.Println("data: ", data)
+	gin.BasicAuth(gin.Accounts{
+		"hestia": "A7Xm9WbUZG7cT2Au",
+		// "hello": "326363246",
+	})
+	// c.JSON(http.StatusOK, gin.H{"data" : data})
+	// authorized.POST("/", func(x *gin.Context) {
+		user := c.Request.Header["Authorization"]
+		fmt.Println("user: ",user[0])
+		if user[0] == "Basic aGVzdGlhOkE3WG05V2JVWkc3Y1QyQXU="{
+			c.JSON(http.StatusOK, gin.H{"data": data})
+		}else{
+			c.JSON(http.StatusOK, gin.H{"data":"not authorized"})
+		}
+		// if d, ok:= data[user]; ok{
+		// 	c.JSON(http.StatusOK, gin.H{"user": user, "secret": d})
+		// } else {
+		// 	c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
+		// }
+	
+
+
 	body := c.Request.Body
 	value, err := ioutil.ReadAll(body)
 	if err != nil {
