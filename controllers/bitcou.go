@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"encoding/base64"
+	// "encoding/base64"
 	"fmt"
 	"github.com/bitcou/bitcou-wrapper/bitcou"
 	wrap_err "github.com/bitcou/bitcou-wrapper/errors"
@@ -28,28 +28,10 @@ func (b *BitcouController) CreateOrder(c *gin.Context) {
 		"user":    gin.H{"email": "hestia@example.com", "phone": "0101010"},
 		"data":    gin.H{"email": "data@example.com", "phone": "02020202"},
 	}
-	fmt.Println("data: ", data)
-	// authorized:= gin.BasicAuth(gin.Accounts{
-	// 	"hestia": "A7Xm9WbUZG7cT2Au",
-	// 	"hello": "326363246",
-	// })
-	fakeauthorized:=map[string]string{
-		"hestia": "A7Xm9WbUZG7cT2Au",
-		"hello": "326363246",
-	}
-		user := ((c.Request.Header["Authorization"])[0])[6:len(c.Request.Header["Authorization"][0])]
-		decodedUser, err := base64.StdEncoding.DecodeString(user)
-		founded := false;
-		for a,b := range fakeauthorized {
-			s := string(a)+":"+string(b)
-			if(string(decodedUser) == s){
-				founded = true 
-			}
-		}
-		println("exists? ",founded)
-		fmt.Println("user: ", user)
-		fmt.Println("decodedUser: ",string(decodedUser))
-		if (founded == true) {
+		username := c.MustGet(gin.AuthUserKey).(string)
+		fmt.Println("username in postman: ", username)
+		fmt.Println("data[user]: ",data[username])
+		if username != "" {
 			c.JSON(http.StatusOK, gin.H{"data": data})
 		}else{
 			c.JSON(http.StatusOK, gin.H{"data":"not authorized"})

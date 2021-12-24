@@ -44,7 +44,7 @@ func ApplyRoutes(r *gin.Engine) {
 	bc := controllers.NewBitcouController()
 	apiBitcou := r.Group("/bitcou/")
 	{
-		apiBitcou.POST("order", bc.CreateOrder)
+		// apiBitcou.POST("order", bc.CreateOrder)
 		apiBitcou.GET("vouchers", bc.GetVouchers)
 		apiBitcou.GET("vouchers/compact", bc.GetCompactVouchers)
 		apiBitcou.GET("vouchers/catalog", bc.GetCatalog)
@@ -57,6 +57,15 @@ func ApplyRoutes(r *gin.Engine) {
 		apiBitcou.GET("categories", bc.GetCategories)
 		apiBitcou.GET("categories/:categoryId", bc.GetCategories)
 	}
+
+	apiAdmin := r.Group("/admin/",gin.BasicAuth(gin.Accounts{
+		"hestia": "A7Xm9WbUZG7cT2Au",
+		"hello": "326363246",
+	}))
+	{
+		apiAdmin.POST("order", bc.CreateOrder)
+	}
+
 
 	bl := controllers.NewBlockchainController()
 	apiBlockchain := r.Group("/blockchain/")
