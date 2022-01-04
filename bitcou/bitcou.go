@@ -141,7 +141,7 @@ func (b *Bitcou) Purchases(option OrderOperations, purchaseInfo []byte, id strin
 				ServiceNumber    string `json:"serviceNumber"`
 			}{},
 		}
-		err = json.Unmarshal(plainText, &input.UserInfo)
+		err = json.Unmarshal(plainText, &input)
 		if err != nil {
 			log.Println("gql::purchases::error ", err)
 			return nil, err
