@@ -131,7 +131,7 @@ func (b *Bitcou) Purchases(option OrderOperations, purchaseInfo []byte, id strin
 		input := PurchaseInput{
 			TransactionID: "",
 			ProductID:     0,
-			TotalValue:    0,
+			TotalValue:    "",
 			UserInfo: struct {
 				Email            string `json:"email"`
 				Name             string `json:"name"`

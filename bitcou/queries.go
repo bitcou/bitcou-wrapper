@@ -332,9 +332,9 @@ const (
 )
 
 type PurchaseInput struct {
-	TransactionID string  `json:"transactionID"`
-	ProductID     int     `json:"productID"`
-	TotalValue    float64 `json:"totalValue"`
+	TransactionID string `json:"transactionID"`
+	ProductID     int    `json:"productID"`
+	TotalValue    string `json:"totalValue"`
 	UserInfo      struct {
 		Email            string `json:"email"`
 		Name             string `json:"name"`
