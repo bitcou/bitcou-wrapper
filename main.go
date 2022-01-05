@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	err := godotenv.Load(".env")
+	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("error loading .env ", err.Error())
 		return
@@ -23,7 +23,7 @@ func init() {
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "80"
 	}
 
 	App := GetApp()

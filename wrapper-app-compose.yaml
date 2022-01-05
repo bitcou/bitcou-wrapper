@@ -1,0 +1,12 @@
+version: '2'
+services:
+  wrapper-web-app:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      - VIRTUAL_HOST=polisshophelper.kindynos.com
+      - LETSENCRYPT_HOST=polisshophelper.kindynos.com
+      - BITCOU_APIKEY=${BITCOU_APIKEY}
+      - BLOCKCHAIN_KEY=${BLOCKCHAIN_KEY}

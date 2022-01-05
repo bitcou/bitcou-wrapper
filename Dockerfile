@@ -1,16 +1,19 @@
-FROM golang:latest
-
-WORKDIR /app
+FROM golang:alpine AS build
+RUN apk --no-cache add gcc g++ make git
+WORKDIR /go/src/app
 
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
+RUN go mod tidy
 COPY . .
+# RUN go mod init webserver
+# RUN go mod tidy
+RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/web-app ./main.go
 
-ENV PORT 8000
-# ENV BITCOU_KEY 
-# ENV BLOCKCHAIN_KEY passwordWithLove
-
-RUN go build
-CMD [ "./bitcou-wrapper" ]
-
+FROM alpine:3.13
+RUN apk --no-cache add ca-certificates
+WORKDIR /usr/bin
+COPY --from=build /go/src/app/bin /go/bin
+EXPOSE 80
+ENTRYPOINT /go/bin/web-app --port 80
