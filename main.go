@@ -62,7 +62,7 @@ func ApplyRoutes(r *gin.Engine) {
 	apiBlockchain := r.Group("/blockchain/")
 	{
 		apiBlockchain.POST("encrypt", bl.Encrypt)
-		// apiBlockchain.POST("decrypt", bl.Decrypt)
+		apiBlockchain.POST("decrypt", bl.Decrypt)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
