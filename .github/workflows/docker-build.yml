@@ -15,7 +15,7 @@ jobs:
         host: ${{ secrets.WRAPPER_HOST }}
         username: ${{ secrets.WRAPPER_USERNAME }}
         key: ${{ secrets.WRAPPER_KEY }}
-        port: ${{ secrets.WRAPPER_PORT }}
+        port: 22
         script: |
           cd bitcou-wrapper
           git pull origin main
