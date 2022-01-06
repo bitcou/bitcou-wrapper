@@ -35,7 +35,7 @@ func (b *BlockchainController) Encrypt(c *gin.Context) {
 	body := c.Request.Body
 	value, err := ioutil.ReadAll(body)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, nil)
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
 		return
 	}
 	var purchaseInput bitcou.PurchaseInput
