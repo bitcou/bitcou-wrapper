@@ -19,4 +19,5 @@ jobs:
         script: |
           cd bitcou-wrapper
           git pull origin main
-          git status
+          docker-compose -f wrapper-app-compose.yaml up --build -d
+          docker rmi $(docker images -f dangling=true -q)
