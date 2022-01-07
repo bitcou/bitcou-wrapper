@@ -128,20 +128,10 @@ func (b *Bitcou) Purchases(option OrderOperations, purchaseInfo []byte, id strin
 			log.Println("gql::purchases::error ", err)
 			return nil, err
 		}
-		input := PurchaseInput{
-			TransactionID: "",
-			ProductID:     0,
-			TotalValue:    "",
-			UserInfo: struct {
-				Email            string `json:"email"`
-				Name             string `json:"name"`
-				Country          string `json:"country"`
-				PhoneCountryCode string `json:"phoneCountryCode"`
-				PhoneNumber      string `json:"phoneNumber"`
-				ServiceNumber    string `json:"serviceNumber"`
-			}{},
-		}
+
+		var input PurchaseInput
 		err = json.Unmarshal(plainText, &input)
+		input.TransactionID = data.TransactionId
 		if err != nil {
 			log.Println("gql::purchases::error ", err)
 			return nil, err
