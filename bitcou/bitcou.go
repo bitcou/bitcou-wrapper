@@ -3,10 +3,11 @@ package bitcou
 import (
 	"context"
 	"encoding/json"
-	"github.com/bitcou/bitcou-wrapper/models"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/bitcou/bitcou-wrapper/models"
 
 	wrap_err "github.com/bitcou/bitcou-wrapper/errors"
 	"github.com/bitcou/bitcou-wrapper/utils"
@@ -56,7 +57,7 @@ func (b *Bitcou) Catalog(variantProductID string, country string, category int) 
 
 	err := b.client.Query(context.Background(), &catalogQuery, variables)
 	if err != nil {
-		log.Println("gql::products::error ", err)
+		log.Println("gql::catalog::error ", err)
 		return nil, err
 	}
 	return catalogQuery.Brand, nil
@@ -121,12 +122,12 @@ func (b *Bitcou) Purchases(option OrderOperations, purchaseInfo []byte, id strin
 		var data models.CreateOrderEncryptedInput
 		err := json.Unmarshal(purchaseInfo, &data)
 		if err != nil {
-			return nil, err
+			return nil, wrap_err.ErrorInternalServer
 		}
 		plainText, err := utils.DecryptInit(data.UserInfo)
 		if err != nil {
 			log.Println("gql::purchases::error ", err)
-			return nil, err
+			return nil, wrap_err.ErrorInternalServer
 		}
 
 		var input PurchaseInput
@@ -134,7 +135,7 @@ func (b *Bitcou) Purchases(option OrderOperations, purchaseInfo []byte, id strin
 		input.TransactionID = data.TransactionId
 		if err != nil {
 			log.Println("gql::purchases::error ", err)
-			return nil, err
+			return nil, wrap_err.ErrorInternalServer
 		}
 
 		variables := map[string]interface{}{
@@ -155,7 +156,12 @@ func (b *Bitcou) Purchases(option OrderOperations, purchaseInfo []byte, id strin
 			log.Println("gql::purchases::error ", err)
 			return nil, err
 		}
-		return getPurchaseQuery.Purchases[0], nil
+
+		if len(getPurchaseQuery.Purchases) > 0 {
+			return getPurchaseQuery.Purchases[0], nil
+		} else {
+			return nil, wrap_err.ErrorOrderNotFound
+		}
 	} else {
 		return nil, nil
 	}
@@ -167,11 +173,15 @@ func (b *Bitcou) Countries(id string) (interface{}, error) {
 	}
 	err := b.client.Query(context.Background(), &getCountries, variables)
 	if err != nil {
-		log.Println("gql::products::error ", err)
+		log.Println("gql::countries::error ", err)
 		return nil, err
 	}
 	if id != "" {
-		return getCountries.Countries[0], nil
+		if len(getCountries.Countries) > 0 {
+			return getCountries.Countries[0], nil
+		} else {
+			return nil, wrap_err.ErrorInvalidCountry
+		}
 	} else {
 		return getCountries.Countries, nil
 	}
@@ -182,7 +192,7 @@ func (b *Bitcou) Categories(id string) (interface{}, error) {
 	if id == "" {
 		err = b.client.Query(context.Background(), &getCategories, nil)
 		if err != nil {
-			log.Println("gql::products::error ", err)
+			log.Println("gql::categories::error ", err)
 			return nil, err
 		}
 		return getCategories.Categories, nil
@@ -192,7 +202,7 @@ func (b *Bitcou) Categories(id string) (interface{}, error) {
 		}
 		err = b.client.Query(context.Background(), &getCategoriesFilter, variables)
 		if err != nil {
-			log.Println("gql::products::error ", err)
+			log.Println("gql::categories::error ", err)
 			return nil, err
 		}
 		return getCategoriesFilter.Categories[0], nil

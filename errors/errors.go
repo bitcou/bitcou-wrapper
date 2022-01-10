@@ -22,6 +22,8 @@ var (
 	ErrorInternalServer = errors.New("internal server error")
 	// ErrorProductNotFound invalid id, product not found.
 	ErrorProductNotFound = errors.New("the requested product was not found")
+	// ErrorProductNotFound invalid id, product not found.
+	ErrorOrderNotFound = errors.New("the requested order was not found")
 	// ErrorInvalidCategory invalid category id.
 	ErrorInvalidCategory = errors.New("invalid category id")
 	// ErrorInvalidCategory invalid country id.
