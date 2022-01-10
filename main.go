@@ -31,6 +31,23 @@ func main() {
 }
 
 func GetApp() *gin.Engine {
+	firebase := controllers.NewFirebaseHandler()
+	//err := firebase.RegisterPurchase("0xEa703E63BA6C9b5224969d6483327B8e65AF76CC", models.FirebaseAccount{
+	//	Address: "0xEa703E63BA6C9b5224969d6483327B8e65AF76CC",
+	//	Purchases: []models.FirebasePurchase{models.FirebasePurchase{
+	//		ID:            "1",
+	//		ProductId:     "9856",
+	//		TotalValue:    6,
+	//		TransactionId: "0x90132cfc9c656f59f21c3341718ad635b2a67ba30a993d1cd7ed61bbd2fcee7f",
+	//		Status:        "REDEEMED",
+	//		Timestamp:     1641841624,
+	//	}},
+	//})
+	data, err := firebase.GetPurchasesByAddress("0xEa703E63BA6C9b5224969d6483327B8e65AF76CC")
+	fmt.Println(data)
+	if err != nil {
+		fmt.Print("error purchasing: ", err)
+	}
 	App := gin.Default()
 	corsConf := cors.DefaultConfig()
 	corsConf.AllowAllOrigins = true

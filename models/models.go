@@ -8,3 +8,17 @@ type CreateOrderEncryptedInput struct {
 	TotalValue    decimal.Decimal
 	UserInfo      []byte
 }
+
+type FirebaseAccount struct {
+	Address   string
+	Purchases []FirebasePurchase
+}
+
+type FirebasePurchase struct {
+	ID            string
+	ProductId     string
+	TotalValue    float64
+	TransactionId string
+	Status        string
+	Timestamp     int64
+}
