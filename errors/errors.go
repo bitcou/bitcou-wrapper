@@ -26,4 +26,6 @@ var (
 	ErrorInvalidCategory = errors.New("invalid category id")
 	// ErrorInvalidCategory invalid country id.
 	ErrorInvalidCountry = errors.New("no country was found with that id")
+	// ErrorInvalidCategory invalid country id.
+	ErrorInvalidJson = errors.New("there is an error in the body, please check each field and its data type")
 )
