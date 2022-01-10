@@ -1,6 +1,9 @@
 package wrapper_errors
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 func New(err error) map[string]string {
 	return map[string]string{
@@ -8,9 +11,23 @@ func New(err error) map[string]string {
 	}
 }
 
+func GetGqlError(err error) error {
+	fi := strings.TrimPrefix(err.Error(), "Message: ")
+	lastInd := strings.Index(fi, ", Locations: ")
+	return errors.New(fi[:lastInd])
+}
+
 var (
 	// ErrorInternalServer internal server error.
 	ErrorInternalServer = errors.New("internal server error")
 	// ErrorProductNotFound invalid id, product not found.
 	ErrorProductNotFound = errors.New("the requested product was not found")
+	// ErrorProductNotFound invalid id, product not found.
+	ErrorOrderNotFound = errors.New("the requested order was not found")
+	// ErrorInvalidCategory invalid category id.
+	ErrorInvalidCategory = errors.New("invalid category id")
+	// ErrorInvalidCategory invalid country id.
+	ErrorInvalidCountry = errors.New("no country was found with that id")
+	// ErrorInvalidCategory invalid country id.
+	ErrorInvalidJson = errors.New("there is an error in the body, please check each field and its data type")
 )

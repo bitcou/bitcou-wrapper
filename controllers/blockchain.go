@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 
@@ -35,23 +36,27 @@ func (b *BlockchainController) Encrypt(c *gin.Context) {
 	body := c.Request.Body
 	value, err := ioutil.ReadAll(body)
 	if err != nil {
+		log.Println("blockchain::encrypt::error ", err)
 		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
 		return
 	}
 	var purchaseInput bitcou.PurchaseInput
 	err = json.Unmarshal(value, &purchaseInput)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
+		log.Println("blockchain::encrypt::error ", err)
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInvalidJson))
 		return
 	}
 	inputJson, err := json.Marshal(purchaseInput)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, nil)
+		log.Println("blockchain::encrypt::error ", err)
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
 		return
 	}
 	encryptedData, err := b.encryptData(inputJson)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, nil)
+		log.Println("blockchain::encrypt::error ", err)
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
 		return
 	}
 	encryptedDataObj := CipherString{
@@ -64,24 +69,28 @@ func (b *BlockchainController) Decrypt(c *gin.Context) {
 	body := c.Request.Body
 	value, err := ioutil.ReadAll(body)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, nil)
+		log.Println("blockchain::decrypt::error ", err)
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
 		return
 	}
 	var message CipherString
 	err = json.Unmarshal(value, &message)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, nil)
+		log.Println("blockchain::decrypt::error ", err)
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(err))
 		return
 	}
 	plainText, err := b.decryptData(message.CipherStr)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, nil)
+		log.Println("blockchain::decrypt::error ", err)
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
 		return
 	}
 	var jsonMap map[string]interface{}
 	err = json.Unmarshal(plainText, &jsonMap)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, nil)
+		log.Println("blockchain::decrypt::error ", err)
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
 		return
 	}
 	c.IndentedJSON(http.StatusOK, jsonMap)
