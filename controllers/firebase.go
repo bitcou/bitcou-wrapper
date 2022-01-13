@@ -1,8 +1,10 @@
 package controllers
 
 import (
-	"fmt"
+	"encoding/json"
+	"github.com/bitcou/bitcou-wrapper/bitcou"
 	"github.com/bitcou/bitcou-wrapper/firebase"
+	"github.com/bitcou/bitcou-wrapper/utils"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
@@ -24,12 +26,22 @@ func (fs *FirebaseController) GetAccountPurchases(c *gin.Context) {
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, nil)
 	}
-	fmt.Println(value)
-	// TODO Add logic to verify signature and remove hard coded signature
-	purchases, err := fs.handler.GetPurchasesByAddress("0xEa703E63BA6C9b5224969d6483327B8e65AF76CC")
+	var message bitcou.MessageVerification
+	err = json.Unmarshal(value, &message)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, nil)
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	verified := utils.VerifySig(message.Address, message.Message, []byte("hello"))
+	if verified {
+		purchases, err := fs.handler.GetPurchasesByAddress(message.Address)
+		if err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, nil)
+		}
+		c.IndentedJSON(http.StatusOK, purchases)
+		return
+	} else {
+		c.IndentedJSON(http.StatusNotFound, nil)
 	}
 
-	c.IndentedJSON(http.StatusOK, purchases)
 }

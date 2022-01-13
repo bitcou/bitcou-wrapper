@@ -23,7 +23,7 @@ func init() {
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "80"
+		port = "8080"
 	}
 
 	App := GetApp()
@@ -80,6 +80,7 @@ func ApplyRoutes(r *gin.Engine) {
 	{
 		apiBlockchain.POST("encrypt", bl.Encrypt)
 		// apiBlockchain.POST("decrypt", bl.Decrypt)
+		apiBlockchain.POST("verify", bl.VerifyMessage)
 	}
 
 	fb := os.Getenv("FIREBASE_CRED")
