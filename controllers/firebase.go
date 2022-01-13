@@ -32,7 +32,7 @@ func (fs *FirebaseController) GetAccountPurchases(c *gin.Context) {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
-	verified := utils.VerifySig(message.Address, message.Message, []byte("hello"))
+	verified := utils.VerifySig(message.Address, message.Message, []byte("hello")) // TODO replace with dynamic message
 	if verified {
 		purchases, err := fs.handler.GetPurchasesByAddress(message.Address)
 		if err != nil {
