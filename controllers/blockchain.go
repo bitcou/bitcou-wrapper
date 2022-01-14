@@ -5,6 +5,7 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/bitcou/bitcou-wrapper/bitcou"
 	wrap_err "github.com/bitcou/bitcou-wrapper/errors"
+	"github.com/bitcou/bitcou-wrapper/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -30,6 +32,30 @@ func NewBlockchainController() *BlockchainController {
 
 type CipherString struct {
 	CipherStr []byte `json:"cipherStr"`
+}
+
+func (b *BlockchainController) VerifyMessage(c *gin.Context) {
+	body := c.Request.Body
+	value, err := ioutil.ReadAll(body)
+	if err != nil {
+		log.Println("blockchain::encrypt::error ", err)
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
+		return
+	}
+	var message bitcou.MessageVerification
+	err = json.Unmarshal(value, &message)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, wrap_err.New(wrap_err.ErrorInternalServer))
+		return
+	}
+
+	isVerified := utils.VerifySig(message.Address, message.Message, []byte("hello"))
+	if isVerified {
+		fmt.Println("verified")
+		c.IndentedJSON(http.StatusOK, "")
+	} else {
+		fmt.Println("not verified")
+	}
 }
 
 func (b *BlockchainController) Encrypt(c *gin.Context) {

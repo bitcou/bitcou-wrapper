@@ -10,3 +10,4 @@ services:
       - LETSENCRYPT_HOST=polisshophelper.kindynos.com
       - BITCOU_APIKEY=${BITCOU_APIKEY}
       - BLOCKCHAIN_KEY=${BLOCKCHAIN_KEY}
+      - FIREBASE_CRED=${FIREBASE_CRED}
