@@ -23,7 +23,7 @@ func init() {
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "80"
 	}
 
 	App := GetApp()
@@ -31,23 +31,6 @@ func main() {
 }
 
 func GetApp() *gin.Engine {
-	//firebase := firebase.NewFirebaseHandler()
-	//err := firebase.RegisterPurchase("0xEa703E63BA6C9b5224969d6483327B8e65AF76CC", models.FirebaseAccount{
-	//	Address: "0xEa703E63BA6C9b5224969d6483327B8e65AF76CC",
-	//	Purchases: []models.FirebasePurchase{models.FirebasePurchase{
-	//		ID:            "1",
-	//		ProductId:     "9856",
-	//		TotalValue:    6,
-	//		TransactionId: "0x90132cfc9c656f59f21c3341718ad635b2a67ba30a993d1cd7ed61bbd2fcee7f",
-	//		Status:        "REDEEMED",
-	//		Timestamp:     1641841624,
-	//	}},
-	//})
-	//data, err := firebase.GetPurchasesByAddress("0xEa703E63BA6C9b5224969d6483327B8e65AF76CC")
-	//fmt.Println(data)
-	//if err != nil {
-	//	fmt.Print("error purchasing: ", err)
-	//}
 	App := gin.Default()
 	corsConf := cors.DefaultConfig()
 	corsConf.AllowAllOrigins = true
@@ -79,18 +62,7 @@ func ApplyRoutes(r *gin.Engine) {
 	apiBlockchain := r.Group("/blockchain/")
 	{
 		apiBlockchain.POST("encrypt", bl.Encrypt)
-		// apiBlockchain.POST("decrypt", bl.Decrypt)
-		apiBlockchain.POST("verify", bl.VerifyMessage)
-	}
-
-	fb := os.Getenv("FIREBASE_CRED")
-	if fb != "" {
-		fs := controllers.NewFirebaseController()
-		apiFirebase := r.Group("/history/")
-		{
-			apiFirebase.POST("orders", fs.GetAccountPurchases)
-			apiFirebase.GET("secret/:address", fs.GetAccountSecret)
-		}
+		apiBlockchain.POST("decrypt", bl.Decrypt)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
