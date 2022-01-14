@@ -326,11 +326,6 @@ type CatalogFilter struct {
 // Queries for purchases
 type OrderOperations string
 
-type MessageVerification struct {
-	Address string `json:"address"`
-	Message string `json:"message"`
-}
-
 const (
 	CREATE_ORDER OrderOperations = "CREATE_ORDER"
 	GET_ORDER                    = "GET_ORDER"
