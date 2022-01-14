@@ -89,6 +89,7 @@ func ApplyRoutes(r *gin.Engine) {
 		apiFirebase := r.Group("/history/")
 		{
 			apiFirebase.POST("orders", fs.GetAccountPurchases)
+			apiFirebase.GET("secret/:address", fs.GetAccountSecret)
 		}
 	}
 

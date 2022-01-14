@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 type FirebaseController struct {
@@ -32,9 +33,18 @@ func (fs *FirebaseController) GetAccountPurchases(c *gin.Context) {
 		c.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
-	verified := utils.VerifySig(message.Address, message.Message, []byte("hello")) // TODO replace with dynamic message
+	nonce, err := fs.handler.GetSecretByAddress(message.Address)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	verified := utils.VerifySig(message.Address, message.Message, []byte(strconv.Itoa(nonce.Nonce)))
 	if verified {
 		purchases, err := fs.handler.GetPurchasesByAddress(message.Address)
+		_, err = fs.handler.UpdateNonce(message.Address)
+		if err != nil {
+			return
+		}
 		if err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, nil)
 		}
@@ -44,4 +54,14 @@ func (fs *FirebaseController) GetAccountPurchases(c *gin.Context) {
 		c.IndentedJSON(http.StatusNotFound, nil)
 	}
 
+}
+
+func (fs *FirebaseController) GetAccountSecret(c *gin.Context) {
+	address := c.Param("address")
+	secret, err := fs.handler.GetSecretByAddress(address)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+	c.IndentedJSON(http.StatusOK, secret)
 }

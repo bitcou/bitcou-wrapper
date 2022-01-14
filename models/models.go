@@ -15,10 +15,16 @@ type FirebaseAccount struct {
 }
 
 type FirebasePurchase struct {
-	ID            string
-	ProductId     string
-	TotalValue    float64
-	TransactionId string
-	Status        string
-	Timestamp     int64
+	ID                 string  `json:"id"`
+	ProductId          string  `json:"product_id"`
+	TotalValue         float64 `json:"total_value"`
+	TransactionId      string  `json:"transaction_id"`
+	Status             string  `json:"status"`
+	Timestamp          int64   `json:"timestamp"`
+	Code               string  `json:"code"`
+	RedeemInstructions string  `json:"redeem_instructions"`
+	RedeemUrl          string  `json:"redeem_url"`
+}
+type FirebaseNonce struct {
+	Nonce int `json:"nonce"`
 }

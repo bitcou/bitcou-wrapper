@@ -63,6 +63,40 @@ func (fs *FireStoreHandler) GetPurchasesByAddress(address string) (account model
 	return account, nil
 }
 
+func (fs *FireStoreHandler) GetSecretByAddress(address string) (nonce models.FirebaseNonce, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	doc, err := fs.firestore.Collection("secrets").Doc(address).Get(ctx)
+	if !doc.Exists() {
+		_, err = fs.firestore.Collection("secrets").Doc(address).Set(ctx, nonce)
+		if err != nil {
+			return models.FirebaseNonce{Nonce: -1}, err
+		}
+		return nonce, nil
+	} else {
+		err = doc.DataTo(&nonce)
+		return nonce, err
+	}
+}
+
+// UpdateNonce
+// Updates nonce value with a +1, meant to be called on every message verification
+func (fs *FireStoreHandler) UpdateNonce(address string) (nonce models.FirebaseNonce, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	doc, err := fs.firestore.Collection("secrets").Doc(address).Get(ctx)
+	if doc.Exists() {
+		err = doc.DataTo(&nonce)
+		nonce.Nonce += 1
+		_, err = fs.firestore.Collection("secrets").Doc(address).Set(ctx, nonce)
+		if err != nil {
+			return models.FirebaseNonce{Nonce: -1}, err
+		}
+		return nonce, nil
+	}
+	return models.FirebaseNonce{Nonce: -1}, nil
+}
+
 func (fs *FireStoreHandler) RegisterPurchase(address string, newPurchase models.FirebasePurchase) error {
 	currentInfo, err := fs.GetPurchasesByAddress(address)
 	if err != nil {
