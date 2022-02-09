@@ -27,9 +27,9 @@ func NewBitcou(apiKey string, dev bool) *Bitcou {
 	b.apiKey = apiKey
 	b.dev = dev
 	if dev {
-		b.URL = "https://sandbox-bitcou.kindynos.com/query"
+		b.URL = "https://sandbox-bitcou.kindynos.mx/query"
 	} else {
-		b.URL = "https://api-bitcou.kindynos.com/query"
+		b.URL = "https://api-bitcou.kindynos.mx/query"
 	}
 	b.client = b.newBitcouClient()
 	return b
